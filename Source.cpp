@@ -4,71 +4,64 @@
 
 enum class Pickups { HEALTH, AMMO, ARMOR };
 enum class SpecialPickups{SHIELD, SUPERHEALTH, AMMO};
+enum class Weapons { SWORD, PISTOL, GRENADE };
+
 
 struct Player {
 	int rank = 0;
 	std::string name = "";
 	float health = 100.0f;
 	Pickups pickup;
+	Weapons weapon;
 };
 
 struct Enemy {
 	std::string name = "";
 	float health = 100.0f;
 
-	enum class Weapons { SWORD, PISTOL, GRENADE};
-
+	Weapons weapon;
 
 };
 
-void firstLevel(int& totalScore)
+float takeDamage(Player player, int damageAmount)
 {
+	player.health -= damageAmount;
+	return player.health;
+}
+
+float takeDamage(Enemy enemy, int damageAmount)
+{
+	enemy.health -= damageAmount;
+	return enemy.health;
+}
+
+void firstLevel(int& totalScore, Player Player1)
+{
+	Enemy enemy1;
 	int score = 0;
-	std::cout << "Welcome to level one\n";
-	int playerChoice = 0;
 	srand((unsigned)time(NULL));
+	int enemyWeapon = rand() % 4 + 0;
 
-	//gameplay
-	//get a random number
+	std::cout << "Welcome to level one\n";
+	std::cout << "Enemy has arrived with a ";
+
+	switch (enemyWeapon)
+	{
+	case 0:
+		enemy1.weapon = Weapons::SWORD;
+		std::cout << "Sword!\n";
+		break;
+	case 1:
+		enemy1.weapon = Weapons::PISTOL;
+		std::cout << "Pistol!\n";
+		break;
+	case 2:
+		enemy1.weapon = Weapons::GRENADE;
+		std::cout << "Grenade!\n";
+		break;
+	}
+
 	
-	int random = rand() % 15 + 1;
-
-	std::cout << "A random number from 1-15 has been choosen\n";
-	std::cout << "Try to guess it\n";
-
-	bool numberFound = false;
-
-
-	do {
-		//check random number against player's number
-
-		std::cout << "Enter a number(1-15): ";
-		std::cin >> playerChoice;
-
-		if (random == playerChoice)
-		{
-			std::cout << "You win! The number was: " << random;
-			numberFound = true;
-		}
-		else if (playerChoice > random)
-		{
-			std::cout << "You're above, try going lower\n";
-		}
-		else //check player's number for less than or greater than random 
-		{
-			std::cout << "You're below, try going higher\n";
-		}
-
-		//give hint's based on the size of the difference
-		std::cout << "The difference is: " << (random - playerChoice) << std::endl;
-
-	} while (!numberFound);
-	
-	//do math operations with random number and only tell user 2 out of the 3 numbers used
-
-	std::cout << "I heard that 2+2=4, very interesting I would like to know more\n";
-
-	//no return
 }
 
 void secondLevel(int& totalScore, int scores[])
@@ -160,6 +153,39 @@ int main()
 	}
 	} while (!pickupChoiceIsValid);
 
+	int playerChoice = 0;
+
+	bool weaponSlected = false;
+
+	do {
+		std::cout << "An enemy has arrived! Pick a weapon!\n";
+		std::cout << "(0)Sword (1)Pistol (2)Grenade\n";
+		std::cin >> playerChoice;
+
+		if (0 == playerChoice)
+		{
+			Player1.weapon = Weapons::SWORD;
+			weaponSlected = true;
+			std::cout << "You chose a sword!\n";
+		}
+		else if (1 == playerChoice)
+		{
+			Player1.weapon = Weapons::PISTOL;
+			weaponSlected = true;
+			std::cout << "You chose a Pistol!\n";
+
+		}
+		else //check player's number for less than or greater than random 
+		{
+			Player1.weapon = Weapons::GRENADE;
+			weaponSlected = true;
+			std::cout << "You chose a Grenade!\n";
+
+		}
+
+	} while (!weaponSlected);
+
+
 	do 
 	{
 		std::cout << "Are you ready to start playing? (1)yes or (2)no";
@@ -184,7 +210,7 @@ int main()
 	if (keepPlaying == 1)
 	{
 		//play levels
-		firstLevel(totalScore);
+		firstLevel(totalScore, Player1);
 
 		//output game data to a file
 	}
