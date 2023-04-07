@@ -15,6 +15,10 @@ struct Player {
 struct Enemy {
 	std::string name = "";
 	float health = 100.0f;
+
+	enum class Weapons { SWORD, PISTOL, GRENADE};
+
+
 };
 
 void firstLevel(int& totalScore)
