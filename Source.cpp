@@ -1,25 +1,55 @@
 #include <iostream>
 #include <string>
 #include <time.h>
+#include <vector>
 
-enum class Pickups { HEALTH, AMMO, ARMOR };
 enum class SpecialPickups{SHIELD, SUPERHEALTH, AMMO};
-enum class Weapons { SWORD, PISTOL, GRENADE };
+
+struct Pickups {
+	enum class Health { FULL_HEALTH, HALF_HEALTH, QUARTER_HEALTH };
+	enum class AMMO { GLOCK_AMMO, COLT45_AMMO, DESERT_EAGLE_AMMO, RAGINF_BULL_AMMO};
+	enum class ARMOR { LITE, MEDIUM, HEAVY };
+
+};
+
+struct Weapons {
+	enum Sword {LONGSWORD, DAGGER, LEGOLAS_SWORDS, EXCALIBUR };
+	enum class Pistol {GLOCK, COLT45, DESERT_EAGLE, RAGING_BULL};
+	enum class Grenade {FRAG_GRENADE, FLASHBANG, SMOKE, MALOTOV};
+
+
+};
+
+struct Attacks {
+
+	enum class Pistol { SINGLE_SHOT, MULTIPLE_SHOT, PISTOL_WHIP, THROW_PISTOL };
+	enum class Sword { QUICK, STRONG, COMBO };
+	enum class Grenade { THROW, COOK, SMACK_WITH_GRENADE };
+
+};
 
 
 struct Player {
 	int rank = 0;
+	//std::vector<std::string> RankType = {"You're not too bad", "Getting Better", "Wow, look out!", "You need to touch grass"};
+	std::string RankType[4] = { "You're not too bad", "Getting Better", "Wow, look out!", "You need to touch grass" };
 	std::string name = "";
 	float health = 100.0f;
+	float stamina = 50.0f;
 	Pickups pickup;
 	Weapons weapon;
+	Attacks attacks;
+
 };
 
 struct Enemy {
 	std::string name = "";
 	float health = 100.0f;
-
+	float stamina = 50.0f;
 	Weapons weapon;
+	Attacks attacks;
+
+	bool isArmed = true;
 
 };
 
@@ -39,8 +69,12 @@ void firstLevel(int& totalScore, Player Player1)
 {
 	Enemy enemy1;
 	int score = 0;
+
+	if (Player1.RankType. == "You're not too bad")
 	srand((unsigned)time(NULL));
 	int enemyWeapon = rand() % 4 + 0;
+	int enemyWeaponType = rand() % 4 + 0;
+
 
 	std::cout << "Welcome to level one\n";
 	std::cout << "Enemy has arrived with a ";
@@ -48,8 +82,21 @@ void firstLevel(int& totalScore, Player Player1)
 	switch (enemyWeapon)
 	{
 	case 0:
-		enemy1.weapon = Weapons::SWORD;
-		std::cout << "Sword!\n";
+		switch (enemyWeaponType)
+		{
+		case 0:
+			enemy1.weapon.Sword::DAGGER;
+			break;
+		case 1:
+			enemy1.weapon.Sword::LONGSWORD;
+			break;
+		case 2:
+			enemy1.weapon.Sword::LEGOLAS_SWORDS;
+			break;
+		case 3:
+			enemy1.weapon.Sword::EXCALIBUR;
+			break;
+		}
 		break;
 	case 1:
 		enemy1.weapon = Weapons::PISTOL;
@@ -60,6 +107,7 @@ void firstLevel(int& totalScore, Player Player1)
 		std::cout << "Grenade!\n";
 		break;
 	}
+
 
 	
 }
@@ -184,6 +232,8 @@ int main()
 		}
 
 	} while (!weaponSlected);
+
+
 
 
 	do 
