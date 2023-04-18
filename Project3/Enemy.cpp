@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "Player.h"
+#include "Weapon.h"
 
 void Enemy::ArmEnemy(Enemy &enemy1)
 {
@@ -77,6 +78,6 @@ void Enemy::Battle()
 	std::cout << "Hooray";
 }
 
-void Enemy::AttackPlayer(const Player& player)
+void Enemy::AttackPlayer(Player& player)
 {
 }

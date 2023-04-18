@@ -1,10 +1,8 @@
 #include "Player.h"
 #include "Enemy.h"
 #include <random>
+#include "Weapon.h"
 
-
-auto const seed = std::random_device ()();
-std::mt19937 rng(seed);
 
 
 void Player::SetDifficulty(Player& player1)
@@ -75,7 +73,7 @@ void Player::PlayerSetup(Player& Player1)
 			if (Player1.CurrentRank == Player1.RankType[0]) {
 				Player1.pickup.Pickups::GLOCK_AMMO;
 				std::cout << "You don't really have a choice here I guess. Glock Ammo\n";
-				Player1.glockammo += 20;
+				Player1.weapons.glockammo += 20;
 				pickupChoiceIsValid = true;
 			}
 			else if (Player1.CurrentRank == Player1.RankType[1]) {
@@ -87,13 +85,13 @@ void Player::PlayerSetup(Player& Player1)
 					std::cout << "You have the ability to choose a better gun and you choose the" <<
 						" Glock ammo. Interesting\n";
 					Player1.pickup.Pickups::GLOCK_AMMO;
-					Player1.glockammo = { 20 };
+					Player1.weapons.glockammo = { 20 };
 					pickupChoiceIsValid = true;
 					break;
 				case 1:
 					std::cout << "You're getting better, especially in your decision making. Colt45 ammo selceted\n";
 					Player1.pickup.Pickups::COLT45_AMMO;
-					Player1.colt45ammo =  20;
+					Player1.weapons.colt45ammo =  20;
 					pickupChoiceIsValid = true;
 					break;
 				default:
@@ -108,19 +106,19 @@ void Player::PlayerSetup(Player& Player1)
 				case 0:
 					std::cout << "Seriously? Glock ammo at this juncture? \n";
 					Player1.pickup.Pickups::GLOCK_AMMO;
-					Player1.glockammo += 20;
+					Player1.weapons.glockammo += 20;
 					pickupChoiceIsValid = true;
 					break;
 				case 1:
 					std::cout << "Going against the meta, how commendable. Colt 45 ammo selected\n";
 					Player1.pickup.Pickups::COLT45_AMMO;
-					Player1.colt45ammo += 20;
+					Player1.weapons.colt45ammo += 20;
 					pickupChoiceIsValid = true;
 					break;
 				case 2:
 					std::cout << "Meta slave here we go. Desert Eagle ammo selected\n";
 					Player1.pickup.Pickups::DESERT_EAGLE_AMMO;
-					Player1.DEammo += 12;
+					Player1.weapons.DEammo += 12;
 					pickupChoiceIsValid = true;
 					break;
 				default:
@@ -135,25 +133,25 @@ void Player::PlayerSetup(Player& Player1)
 				case 0:
 					std::cout << "All these choices, and you decide to pick a glock. \n";
 					Player1.pickup.Pickups::GLOCK_AMMO;
-					Player1.glockammo += 20;
+					Player1.weapons.glockammo += 20;
 					pickupChoiceIsValid = true;
 					break;
 				case 1:
 					std::cout << "Either you're really good at this game or have some screws loose. Colt 45 selected\n";
 					Player1.pickup.Pickups::COLT45_AMMO;
-					Player1.colt45ammo += 20;
+					Player1.weapons.colt45ammo += 20;
 					pickupChoiceIsValid = true;
 					break;
 				case 2:
 					std::cout << "Somewhat logical. Desert Eagle ammo Selected.\n";
 					Player1.pickup.Pickups::DESERT_EAGLE_AMMO;
-					Player1.DEammo += 12;
+					Player1.weapons.DEammo += 12;
 					pickupChoiceIsValid = true;
 					break;
 				case 3:
 					std::cout << "Meta slave meta slave meta slave. Raging Bull ammo Selected\n";
 					Player1.pickup.Pickups::RAGING_BULL_AMMO;
-					Player1.ragingammo += 12;
+					Player1.weapons.ragingammo += 12;
 					pickupChoiceIsValid = true;
 					break;
 				default:
@@ -207,18 +205,21 @@ void Player::PlayerSetup(Player& Player1)
 				std::cout << "You don't really have a choice here a dagger for you! " <<
 					"Keep the pointed end at your enemy and not at yourself.\n";
 				weaponSlected = true;
+				Player1.swordChoice = 1;
 				break;
 
 			case 1:
 				Player1.weapon.Pistol::GLOCK;
 				std::cout << "You really don't have a choice here, you selected glock." <<
 					"Beats using a knife or does it?\n";
+				Player1.pistolChoice = 1;
 				weaponSlected = true;
 				break;
 			case 2:
 				Player1.weapon.Grenade::FRAG_GRENADE;
 				std::cout << " I really hope you don't blow yourself up with this. But " <<
 					"here you go a frag grenade. Doesn't explode like it does in the movies.\n";
+				Player1.grenadeChoice = 1;
 				weaponSlected = true;
 			}
 
@@ -233,12 +234,14 @@ void Player::PlayerSetup(Player& Player1)
 				if (playerChoice2 == 0) {
 					std::cout << "You do realize there is a choice here? Alright screw it dagger it is. \n";
 					Player1.weapon.Sword::DAGGER;
+					Player1.swordChoice = 1;
 					weaponSlected = true;
 				}
 				else if (playerChoice2 == 1)
 				{
 					std::cout << "There was a better choice here believe it or not and you picked it. Heres a longsword and a cookie.\n";
 					Player1.weapon.Sword::LONGSWORD;
+					Player1.swordChoice = 2;
 					weaponSlected = true;
 				}
 				break;
@@ -249,13 +252,13 @@ void Player::PlayerSetup(Player& Player1)
 				if (playerChoice2 == 0) {
 					std::cout << "Okay... Weird Pick, however, you do you glock selected.\n";
 					Player1.weapon.Pistol::GLOCK;
-					Player1.weaponChoice = 0;
+					Player1.pistolChoice = 1;
 					weaponSlected = true;
 				}
 				else if (playerChoice2 == 1) {
 					std::cout << "Colt45. Logical gun choice as it's not great but its not the glock either.\n";
 					Player1.weapon.Pistol::COLT45;
-					Player1.weaponChoice = 1;
+					Player1.pistolChoice = 2;
 					weaponSlected = true;
 				}
 				break;
@@ -267,12 +270,14 @@ void Player::PlayerSetup(Player& Player1)
 				{
 					std::cout << "I don't know what's better here, frag or flash? you do you. Frag Grenade selected.\n";
 					Player1.weapon.Grenade::FRAG_GRENADE;
+					Player1.grenadeChoice = 1;
 					weaponSlected = true;
 				}
 				else if (playerChoice2 == 1)
 				{
 					std::cout << "Flashbang, yeah, either way I mean, atleast with the frag you'd have some lethality.\n";
 					Player1.weapon.Grenade::FLASHBANG;
+					Player1.grenadeChoice = 2;
 					weaponSlected = true;
 				}
 				break;
@@ -287,18 +292,21 @@ void Player::PlayerSetup(Player& Player1)
 				if (playerChoice2 == 0) {
 					std::cout << "You seem to enjoy the dagger experience. Dagger selected.\n";
 					Player1.weapon.Sword::DAGGER;
+					Player1.swordChoice = 1;
 					weaponSlected = true;
 				}
 				else if (playerChoice2 == 1)
 				{
 					std::cout << "This wasn't the better choice this time around. Longsword selected.\n";
 					Player1.weapon.Sword::LONGSWORD;
+					Player1.swordChoice = 2;
 					weaponSlected = true;
 				}
 				else if (playerChoice2 == 2)
 				{
 					std::cout << "Ah a cultured Tolkien fan I see, or are you a fan of the movies? Or both?\n Legolas Sword selected.\n";
 					Player1.weapon.Sword::LEGOLAS_SWORDS;
+					Player1.swordChoice = 3;
 					weaponSlected = true;
 				}
 				break;
@@ -310,19 +318,19 @@ void Player::PlayerSetup(Player& Player1)
 				if (playerChoice2 == 0) {
 					std::cout << "Uh... You really hate the meta huh. Glock selected.\n";
 					Player1.weapon.Pistol::GLOCK;
-					Player1.weaponChoice = 0;
+					Player1.pistolChoice = 1;
 					weaponSlected = true;
 				}
 				else if (playerChoice2 == 1) {
 					std::cout << "Colt45 was great like a rank ago...Colt45 selected\n";
 					Player1.weapon.Pistol::COLT45;
-					Player1.weaponChoice = 1;
+					Player1.pistolChoice = 2;
 					weaponSlected = true;
 				}
 				else if (playerChoice2 == 2) {
 					std::cout << "Rational decision. Desert Eagle selected.\n";
 					Player1.weapon.Pistol::DESERT_EAGLE;
-					Player1.weaponChoice = 2;
+					Player1.pistolChoice = 3;
 					weaponSlected = true;
 				}
 				break;
@@ -334,18 +342,21 @@ void Player::PlayerSetup(Player& Player1)
 				{
 					std::cout << "I don't know what's better here, frag or flash? you do you. Frag Grenade selected.\n";
 					Player1.weapon.Grenade::FRAG_GRENADE;
+					Player1.grenadeChoice = 1;
 					weaponSlected = true;
 				}
 				else if (playerChoice2 == 1)
 				{
 					std::cout << "Flashbang, yeah, either way I mean, atleast with the frag you'd have some lethality.\n";
 					Player1.weapon.Grenade::FLASHBANG;
+					Player1.grenadeChoice = 2;
 					weaponSlected = true;
 				}
 				else if (playerChoice2 == 2)
 				{
 					std::cout << "Smoke Grenade huh. What are you going to do chuck it at them and suffocate them?\n";
 					Player1.weapon.Grenade::SMOKE;
+					Player1.grenadeChoice = 3;
 					weaponSlected = true;
 				}
 				break;
@@ -362,24 +373,28 @@ void Player::PlayerSetup(Player& Player1)
 				if (playerChoice2 == 0) {
 					std::cout << "There was only one real choice here. Dagger selected.\n";
 					Player1.weapon.Sword::DAGGER;
+					Player1.swordChoice = 1;
 					weaponSlected = true;
 				}
 				else if (playerChoice2 == 1)
 				{
 					std::cout << "I uh... Okay.. Longsword selected.\n";
 					Player1.weapon.Sword::LONGSWORD;
+					Player1.swordChoice = 2;
 					weaponSlected = true;
 				}
 				else if (playerChoice2 == 2)
 				{
 					std::cout << "This wasn't the best choice this time around, but I'll allow it. Legolas Swords selected\n";
 					Player1.weapon.Sword::LEGOLAS_SWORDS;
+					Player1.swordChoice = 3;
 					weaponSlected = true;
 				}
 				else if (playerChoice2 == 3)
 				{
 					std::cout << "Excalibur selected. Need I say more?\n";
 					Player1.weapon.Sword::EXCALIBUR;
+					Player1.swordChoice = 4;
 					weaponSlected = true;
 				}
 				else
@@ -396,23 +411,25 @@ void Player::PlayerSetup(Player& Player1)
 				if (playerChoice2 == 0) {
 					std::cout << "Uh... You really hate the meta huh. Glock selected.\n";
 					Player1.weapon.Pistol::GLOCK;
+					Player1.pistolChoice = 1;
 					weaponSlected = true;
 				}
 				else if (playerChoice2 == 1) {
 					std::cout << "Colt45 was great like a rank ago...Colt45 selected\n";
 					Player1.weapon.Pistol::COLT45;
+					Player1.pistolChoice = 2;
 					weaponSlected = true;
 				}
 				else if (playerChoice2 == 2) {
 					std::cout << "Rational decision. Desert Eagle selected.\n";
 					Player1.weapon.Pistol::DESERT_EAGLE;
-					Player1.weaponChoice = 2;
+					Player1.pistolChoice = 3;
 					weaponSlected = true;
 				}
 				else if (playerChoice2 == 3) {
 					std::cout << "The most meta decision you can make. Raging bull selected\n";
 					Player1.weapon.Pistol::RAGING_BULL;
-					Player1.weaponChoice = 3;
+					Player1.pistolChoice = 4;
 					weaponSlected = true;
 				}
 				else {
@@ -427,24 +444,28 @@ void Player::PlayerSetup(Player& Player1)
 				{
 					std::cout << "I don't know what's better here, frag or flash? you do you. Frag Grenade selected.\n";
 					Player1.weapon.Grenade::FRAG_GRENADE;
+					Player1.grenadeChoice = 1;
 					weaponSlected = true;
 				}
 				else if (playerChoice2 == 1)
 				{
 					std::cout << "Flashbang, yeah, either way I mean, atleast with the frag you'd have some lethality.\n";
 					Player1.weapon.Grenade::FLASHBANG;
+					Player1.grenadeChoice = 2;
 					weaponSlected = true;
 				}
 				else if (playerChoice2 == 2)
 				{
 					std::cout << "Smoke Grenade huh. What are you going to do chuck it at them and suffocate them?\n";
 					Player1.weapon.Grenade::SMOKE;
+					Player1.grenadeChoice = 3;
 					weaponSlected = true;
 				}
 				else if (playerChoice == 3)
 				{
 					std::cout << "Molotov. Don't burn yourself.\n";
 					Player1.weapon.Grenade::MALOTOV;
+					Player1.grenadeChoice = 4;
 					weaponSlected = true;
 				}
 				break;
@@ -454,79 +475,50 @@ void Player::PlayerSetup(Player& Player1)
 	} while (!weaponSlected);
 }
 
-void Player::PistolSingleShot(Player& player)
+
+void Player::AttackEnemy(Player& player, Enemy& enemy)
 {
-	std::uniform_int_distribution<int> singleshot(0, 10);
-	double chance = singleshot(rng) * .50 + player.accuracy;
-	if (player.glockammo > 0) {
-		if (chance > 12)
-		{
-			std::cout << "Hit the enemy for " << player.glockDamage[1];
-		}
-		player.glockammo -= 1;
-	}
-	else {
-		std::cout << "Not enough ammo.";
-	}
-}
-
-void Player::PistolMultiShot(Player& player)
-{
-	std::uniform_int_distribution<int> ShotAttempts(2, 6);
-	std::uniform_int_distribution<int> shotaccuracy(0, 10);
-	int shots = ShotAttempts(rng);
-	if (player.glockammo - shots >= 0)
-	{
-		for (int i = 0; i < shots; i++)
-		{
-			double chance = shotaccuracy(rng) * .20 + player.accuracy;
-			if (chance > 10) {
-				std::cout << "Hit for " << player.glockDamage[2] << '\n';
-				player.glockammo--;
-			}
-			else {
-				std::cout << "Miss\n";
-			}
-		}
-	}
-}
-
-void Player::PistolThrow(Player& player)
-{
-	std::uniform_int_distribution<> ThrowChance(1, 5);
-	int throwing = ThrowChance(rng);
-}
-
-void Player::PistolWhip(Player& player)
-{
-}
-
-
-
-void Player::AttackEnemy(Player &player, const class Enemy& enemy)
-{
-	if (weaponChoice == 0 || weaponChoice == 1 || weaponChoice == 2 || weaponChoice == 3)
+	if (pistolChoice == 1 || pistolChoice == 2 || pistolChoice == 3 || pistolChoice == 4) {
 		std::cout << "0) SingleShot 1) Multshot 2) Pistol Whip 3) Throw weapon \n";
-	int playerAttack{};
-	std::cin >> playerAttack;
-	if(playerAttack == 0){
-		PistolSingleShot(player);
+		int playerAttack{};
+		std::cin >> playerAttack;
+		if (playerAttack == 0) {
+			player.weapons.PistolSingleShot(player, enemy);
+		}
+		else if (playerAttack == 1) {
+			player.weapons.PistolMultiShot(player, enemy);
+		}
+		else if (playerAttack == 2) {
+			player.weapons.PistolWhip(player, enemy);
+		}
+		else if (playerAttack == 3) {
+			player.weapons.PistolThrow(player, enemy);
+		}
 	}
-	else if (playerAttack == 1) {
-		PistolMultiShot(player);
-	}
-	else if (playerAttack == 2) {
-		PistolWhip(player);
-	}
-	else if (playerAttack == 3) {
-		PistolThrow(player);
+	else if (swordChoice == 1 || swordChoice == 2 || swordChoice == 3 || swordChoice == 4)
+	{
+		std::cout << "0) Quick Attack 1) Strong Attack 2) Combo Attack\n";
+		int playerAttack{};
+		std::cin >> playerAttack;
+		if (playerAttack == 0) {
+			
+		}
+		else if (playerAttack == 1) {
+
+		}
+		else if (playerAttack == 2) {
+
+		}
+		else if (playerAttack == 3) {
+
+		}
 	}
 }
 
 void Player::CheckAmmoType(){
-	if (weaponChoice == 0)
+	if (pistolChoice == 1)
 	{
-		if (glockammo == 0)
+		if (weapons.glockammo == 0)
 		{
 			std::cout << "You seem to have picked the wrong ammunition for the job. I don't know why, but you did.\n" <<
 				"Shall I switch ammo for you and do you own job for you? 0) yes 1) no \n";
@@ -534,18 +526,18 @@ void Player::CheckAmmoType(){
 			std::cin >> user_input;
 			if (user_input == 0)
 			{	
-				glockammo = 20;
-				colt45ammo = 0;
-				DEammo = 0;
-				ragingammo = 0;
+				weapons.glockammo = 20;
+				weapons.colt45ammo = 0;
+				weapons.DEammo = 0;
+				weapons.ragingammo = 0;
 			}
 			else{
 				std::cout << "It's your funeral\n";
 			}
 		}
 	}
-	else if (weaponChoice == 1) {
-		if (colt45ammo == 0)
+	else if (pistolChoice == 2) {
+		if (weapons.colt45ammo == 0)
 		{
 			std::cout << "You seem to have picked the wrong ammunition for the job. I don't know why, but you did.\n" <<
 				"Shall I switch ammo for you and do you own job for you? 0) yes 1) no \n";
@@ -553,18 +545,18 @@ void Player::CheckAmmoType(){
 			std::cin >> user_input;
 			if (user_input == 0)
 			{
-				glockammo = 0;
-				colt45ammo = 20;
-				DEammo = 0;
-				ragingammo = 0;
+				weapons.glockammo = 0;
+				weapons.colt45ammo = 20;
+				weapons.DEammo = 0;
+				weapons.ragingammo = 0;
 			}
 			else {
 				std::cout << "It's your funeral\n";
 			}
 		}
 	}
-	else if (weaponChoice == 2) {
-		if (glockammo == 0)
+	else if (pistolChoice == 3) {
+		if (weapons.glockammo == 0)
 		{
 			std::cout << "You seem to have picked the wrong ammunition for the job. I don't know why, but you did.\n" <<
 				"Shall I switch ammo for you and do you own job for you? 0) yes 1) no \n";
@@ -572,18 +564,18 @@ void Player::CheckAmmoType(){
 			std::cin >> user_input;
 			if (user_input == 0)
 			{
-				glockammo = 0;
-				colt45ammo = 0;
-				DEammo = 12;
-				ragingammo = 0;
+				weapons.glockammo = 0;
+				weapons.colt45ammo = 0;
+				weapons.DEammo = 12;
+				weapons.ragingammo = 0;
 			}
 			else {
 				std::cout << "It's your funeral.\n";
 			}
 		}
 	}
-	else if (weaponChoice == 3) {
-		if (glockammo == 0)
+	else if (pistolChoice == 4) {
+		if (weapons.glockammo == 0)
 		{
 			std::cout << "You seem to have picked the wrong ammunition for the job. I don't know why, but you did.\n" <<
 				"Shall I switch ammo for you and do you own job for you? 0) yes 1) no \n";
@@ -591,10 +583,10 @@ void Player::CheckAmmoType(){
 			std::cin >> user_input;
 			if (user_input == 0)
 			{
-				glockammo = 0;
-				colt45ammo = 0;
-				DEammo = 0;
-				ragingammo = 12;
+				weapons.glockammo = 0;
+				weapons.colt45ammo = 0;
+				weapons.DEammo = 0;
+				weapons.ragingammo = 12;
 			}
 			else {
 				std::cout << "It's your funeral\n";

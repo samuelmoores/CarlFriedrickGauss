@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <iostream>
-
+#include "Weapon.h"
 #include <random>
 
 
@@ -22,7 +22,6 @@ struct EAttacks {
 };
 
 
-class Player;
 
 class Enemy  {
 public:
@@ -31,11 +30,15 @@ public:
 	float stamina = 50.0f;
 	EAttacks attacks;
 	EWeapons weapon;
+	Weapon weapons;
 	int initiative = 10;
-
+	bool isAttacking = false;
+	bool isDead = false;
+	
+ 
 	bool isArmed = true;
 public:
 	void ArmEnemy(Enemy &enemy1);
 	void Battle();
-	void AttackPlayer(const class Player &player);
+	void AttackPlayer(class Player &player);
 };
