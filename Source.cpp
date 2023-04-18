@@ -2,6 +2,7 @@
 #include <string>
 #include <time.h>
 #include <vector>
+#include <fstream>
 
 struct Pickups {
 	enum  Health { FULL_HEALTH, HALF_HEALTH, QUARTER_HEALTH };
@@ -11,7 +12,7 @@ struct Pickups {
 };
 
 struct Weapons {
-	enum Sword {LONGSWORD, DAGGER, LEGOLAS_SWORDS, EXCALIBUR };
+	enum Sword {DAGGER, LONGSWORD, LEGOLAS_SWORDS, EXCALIBUR };
 	enum Pistol {GLOCK, COLT45, DESERT_EAGLE, RAGING_BULL};
 	enum Grenade {FRAG_GRENADE, FLASHBANG, SMOKE, MALOTOV};
 
@@ -25,7 +26,6 @@ struct Attacks {
 	enum Grenade { THROW, COOK, SMACK_WITH_GRENADE };
 
 };
-
 
 struct Player {
 	int rank = 0;
@@ -72,10 +72,13 @@ float takeDamage(Enemy enemy, int damageAmount)
 	return enemy.health;
 }
 
-void firstLevel(Player Player1)
+void firstLevel(Player& Player1)
 {
 	Enemy enemy1;
 	int score = 0;
+	std::ofstream outFile;
+	std::ifstream inFile;
+	std::cout << "score: " << score << std::endl;
 
 	srand((unsigned)time(NULL));
 	int enemyWeapon = rand() % 4 + 0;
@@ -177,11 +180,24 @@ void firstLevel(Player Player1)
 		enemy1.strength = 75;
 	}
 
-	std::cout << "Choose an attack!\n"
-	std::cout << "\n"
+	std::cout << "Choose an attack!\n";
+	std::cout << "\n";
 
-	
 
+
+	Player1.scores[0]++;
+
+	outFile.open("LevelOneScore.txt");
+
+	outFile << Player1.scores[0];
+
+	outFile.close();
+
+	inFile.open("C:\\VisualStudioProjects\\CarlFriedrickGauss\\LevelOneScore.txt");
+
+	inFile >> score;
+
+	std::cout << "score: " << score << std::endl;
 
 }
 
@@ -396,12 +412,58 @@ void PlayerSetup(Player Player1)
 		}
 	} while (!pickupChoiceIsValid);
 
+	//WeaponChoice
+	do {
+		int weaponChoice;
+
+		std::cout << "Choose a weapon: Sword(0), Pistol(1) or Grenade(2)" << std::endl;
+		std::cin >> weaponChoice;
+
+		switch (weaponChoice)
+		{
+		case 0:
+			if (Player1.CurrentRank == Player1.RankType[0])
+			{
+				std::cout << "Welcome young padawan! :) You get to start with a dagger!" << std::endl;
+			}
+			else if (Player1.CurrentRank == Player1.RankType[1])
+			{
+				int swordType;
+				bool isValid_SwordType;
+				std::cout << "I see you have moved up in the world, Choose between a Dagger(0) or a Longsword(1)\n";
+				std::cin >> swordType;
+
+				do {
+					switch (swordType)
+					{
+					case 0:
+						std::cout << "Interesting choice, I assume your depending on skill...\n";
+						Player1.weapon.Sword::DAGGER;
+						isValid_SwordType = true;
+						break;
+					case 1:
+						std::cout << "A new weapon! The Longsword... with great power comes great responsibility\n";
+						Player1.weapon.Sword::LONGSWORD;
+						isValid_SwordType = true;
+						break;
+					default:
+						std::cout << "Invalid Sword Type, please choose 0 or 1\n";
+					}
+				} while (!isValid_SwordType);
+				
+			}
+
+		}
+
+	} while (!pickupChoiceIsValid);
+
 	int playerChoice = 0;
 
 	bool weaponSlected = false;
 
 
-	/* add more stuff add more stuff*/
+
+	
 }
 
 void MainMenu(Player Player1)
@@ -441,6 +503,7 @@ int main()
 	bool isPlaying = false;
 	
 	MainMenu(Player1);
+
 
 	return 0;
 
