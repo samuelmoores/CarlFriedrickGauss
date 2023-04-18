@@ -1,5 +1,4 @@
 #pragma once
-#include "Player.h"
 #include <string>
 #include <iostream>
 
@@ -38,5 +37,5 @@ public:
 public:
 	void ArmEnemy(Enemy &enemy1);
 	void Battle();
-	void AttackPlayer(Player &player);
+	void AttackPlayer(const class Player &player);
 };

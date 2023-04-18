@@ -5,25 +5,37 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "CombatLogic.h"
+#include <fstream>
+#include <ostream>
+#include "Source.h"
 
 void firstLevel(int& totalScore, Player Player1)
 {
 	Enemy enemy1;
 	int score = 0;
 
-
+	std::ofstream outFile;
+	std::ifstream inFile;
+	outFile.open("LevelOneScore.txt");
+	outFile << Player1.scores[0];
+	outFile.close();
+	inFile.open("LevelOneScore");
+	inFile >> score;
+	std::cout << "score : " << Player1.scores[0] << '\n';
+	
 
 	std::cout << "Welcome to level one\n";
 	std::cout << "Enemy has arrived with a ";
 	enemy1.ArmEnemy(enemy1);
 	Resolution(Player1, enemy1);
 
+
 }
 
 void secondLevel(int& totalScore, int scores[])
 {
 	int score = 0;
-
+	score++;
 	std::cout << "welcome to level two\n";
 
 	//gameplay
@@ -37,7 +49,7 @@ void secondLevel(int& totalScore, int scores[])
 
 	//do math operations with random number and only tell user 2 out of the 3 numbers used
 
-	scores[1] = score;
+	scores[0] = score;
 
 
 }
@@ -73,6 +85,7 @@ int main()
 
 	Player1.SetDifficulty(Player1);
 	Player1.PlayerSetup(Player1);
+	Player1.CheckAmmoType();
 	
 	do
 	{

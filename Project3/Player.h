@@ -1,6 +1,9 @@
 #pragma once
 #include <iostream>
-#include "Enemy.h"
+
+#include <random>
+
+
 
 
 struct Pickups {
@@ -26,7 +29,7 @@ struct Attacks {
 
 };
 
-class Enemy;
+
 
 class Player {
 public:
@@ -37,15 +40,30 @@ public:
 	float stamina = 50.0f;
 	int initiative = 15;
 	int weaponChoice = 0;
+	int accuracy{10};
+	int defense{0};
+	bool isArmed{ true };
 	Pickups pickup;
 	Weapons weapon;
 	Attacks attacks;
+	int glockammo{0};
+	int colt45ammo{ 0 };
+	int DEammo{ 0 };
+	int ragingammo{ 0 };
+	int glockDamage[5] = { 50, 20, 15, 10, 5 };
+	int scores[4] = { 0 , 0, 0, 0 };
 	std::string CurrentRank = RankType[2];
 
 
 public:
 	void SetDifficulty(Player& player1);
 	void PlayerSetup(Player& player1);
-	void Battle();
-	void AttackEnemy(Enemy &enemy); 
+	void PistolSingleShot(Player& player);
+	void PistolMultiShot(Player &player);
+	void PistolThrow(Player &player);
+	void PistolWhip(Player& player);
+	void AttackEnemy(Player &player, const class Enemy &enemy); 
+	void CheckAmmoType();
 };
+
+
