@@ -4,28 +4,18 @@
 #include <vector>
 #include <fstream>
 
-struct Pickups {
-	enum  Health { FULL_HEALTH, HALF_HEALTH, QUARTER_HEALTH };
-	enum  AMMO { GLOCK_AMMO, COLT45_AMMO, DESERT_EAGLE_AMMO, RAGING_BULL_AMMO};
-	enum  ARMOR { LITE, MEDIUM, HEAVY };
+enum  Health { FULL_HEALTH, HALF_HEALTH, QUARTER_HEALTH };
+enum  Ammo { GLOCK_AMMO, COLT45_AMMO, DESERT_EAGLE_AMMO, RAGING_BULL_AMMO };
+enum  Armor { LITE, MEDIUM, HEAVY };
 
-};
+enum Sword { DAGGER, LONGSWORD, LEGOLAS_SWORDS, EXCALIBUR };
+enum Pistol { GLOCK, COLT45, DESERT_EAGLE, RAGING_BULL };
+enum Grenade { FRAG_GRENADE, FLASHBANG, SMOKE, MALOTOV };
 
-struct Weapons {
-	enum Sword {DAGGER, LONGSWORD, LEGOLAS_SWORDS, EXCALIBUR };
-	enum Pistol {GLOCK, COLT45, DESERT_EAGLE, RAGING_BULL};
-	enum Grenade {FRAG_GRENADE, FLASHBANG, SMOKE, MALOTOV};
+enum PistolAttacks { SINGLE_SHOT, MULTIPLE_SHOT, PISTOL_WHIP, THROW_PISTOL };
+enum SwordAttacks { QUICK, STRONG, COMBO };
+enum GrenadeAttacks { THROW, COOK, SMACK_WITH_GRENADE };
 
-
-};
-
-struct Attacks {
-
-	enum Pistol { SINGLE_SHOT, MULTIPLE_SHOT, PISTOL_WHIP, THROW_PISTOL };
-	enum Sword { QUICK, STRONG, COMBO };
-	enum Grenade { THROW, COOK, SMACK_WITH_GRENADE };
-
-};
 
 struct Player {
 	int rank = 0;
@@ -41,9 +31,12 @@ struct Player {
 
 	int weaponChoice = 0; 
 
-	Pickups pickup;
-	Weapons weapon;
-	Attacks attacks;
+	Health healthPickup;
+	Ammo ammoPickup;
+	Armor armorPickup;
+	Sword sword;
+	Pistol pistol;
+	Grenade grenade;
 	std::string CurrentRank = RankType[0];
 };
 
@@ -51,19 +44,17 @@ struct Enemy {
 	std::string name = "";
 	float health = 100.0f;
 	float stamina = 50.0f;
-	Weapons weapon;
-	Attacks attacks;
 	int experience = 0;
+	Sword sword;
 
 	bool isArmed = true;
 	int strength = 50;
 
 };
 
-float takeDamage(Player player, int damageAmount)
+void takeDamage(Player player, int damageAmount)
 {
-	player.health -= damageAmount;
-	return player.health;
+	
 }
 
 float takeDamage(Enemy enemy, int damageAmount)
@@ -78,7 +69,7 @@ void firstLevel(Player& Player1)
 	int score = 0;
 	std::ofstream outFile;
 	std::ifstream inFile;
-	std::cout << "score: " << score << std::endl;
+	int attackChoice = 0;
 
 	srand((unsigned)time(NULL));
 	int enemyWeapon = rand() % 4 + 0;
@@ -95,23 +86,24 @@ void firstLevel(Player& Player1)
 		switch (enemyWeaponType)
 		{
 		case 0:
-			enemy1.weapon.Sword::DAGGER;
 			std::cout << "With a dagger!\n";
+			enemy1.sword = Sword::DAGGER;
 
 			break;
 		case 1:
-			enemy1.weapon.Sword::LONGSWORD;
 			std::cout << "With a longsword!\n";
+			enemy1.sword = Sword::LONGSWORD;
+
 
 			break;
 		case 2:
-			enemy1.weapon.Sword::LEGOLAS_SWORDS;
 			std::cout << "With a legolas swords!\n";
+			enemy1.sword = Sword::LEGOLAS_SWORDS;
 
 			break;
 		case 3:
-			enemy1.weapon.Sword::EXCALIBUR;
 			std::cout << "With a excalibur!\n";
+			enemy1.sword = Sword::EXCALIBUR;
 
 			break;
 		}
@@ -119,22 +111,18 @@ void firstLevel(Player& Player1)
 	case 1:
 		switch (enemyWeaponType) {
 		case 0:
-			enemy1.weapon.Pistol::GLOCK;
 			std::cout << "With a glock!\n";
 
 			break;
 		case 1:
-			enemy1.weapon.Pistol::COLT45;
 			std::cout << "With a colt 45!\n";
 
 			break;
 		case 2:
-			enemy1.weapon.Pistol::DESERT_EAGLE;
 			std::cout << "With a desert eagle!\n";
 
 			break;
 		case 3:
-			enemy1.weapon.Pistol::RAGING_BULL;
 			std::cout << "With a raging bull!\n";
 
 			break;
@@ -143,22 +131,18 @@ void firstLevel(Player& Player1)
 	case 2:
 		switch (enemyWeaponType) {
 		case 0:
-			enemy1.weapon.Grenade::FRAG_GRENADE;
 			std::cout << "With a frag grenade!\n";
 
 			break;
 		case 1:
-			enemy1.weapon.Grenade::SMOKE;
 			std::cout << "With a smoke grenade!\n";
 
 			break;
 		case 2:
-			enemy1.weapon.Grenade::FLASHBANG;
 			std::cout << "With a flash bang!\n";
 
 			break;
 		case 3:
-			enemy1.weapon.Grenade::MALOTOV;
 			std::cout << "With a malotov!\n";
 
 			break;
@@ -180,24 +164,18 @@ void firstLevel(Player& Player1)
 		enemy1.strength = 75;
 	}
 
-	std::cout << "Choose an attack!\n";
-	std::cout << "\n";
+	if (Player1.weaponChoice == 0)
+	{
+		std::cout << "Choose a sword attack!\n (0) Strong (1) Quick";
+		std::cin >> attackChoice;
 
+	}
 
+	if (enemy1.strength == 25)
+	{
+		std::cout << "Enemy's health -25!\n";
+	}
 
-	Player1.scores[0]++;
-
-	outFile.open("LevelOneScore.txt");
-
-	outFile << Player1.scores[0];
-
-	outFile.close();
-
-	inFile.open("C:\\VisualStudioProjects\\CarlFriedrickGauss\\LevelOneScore.txt");
-
-	inFile >> score;
-
-	std::cout << "score: " << score << std::endl;
 
 }
 
@@ -239,11 +217,10 @@ int thirdLevel(int& totalScore, int scores[])
 	return score;
 }
 
-void PlayerSetup(Player Player1)
+void PlayerSetup(Player& Player1)
 {
 	int pickupChoice = 0;
 	bool pickupChoiceIsValid = true;
-	Pickups pickup;
 
 	std::cout << "Name your character: " << std::endl;
 	std::cin >> Player1.name;
@@ -259,26 +236,29 @@ void PlayerSetup(Player Player1)
 		{
 		case 0:
 			if (Player1.CurrentRank == Player1.RankType[0]) {
-				Player1.pickup.Pickups::QUARTER_HEALTH;
+				Player1.healthPickup = Health::QUARTER_HEALTH;
 				std::cout << "You're not too bad, so you only get quarter health\n";
 				pickupChoiceIsValid = true;
 			}
 			else if (Player1.CurrentRank == Player1.RankType[1]) {
-				Player1.pickup.Pickups::HALF_HEALTH;
 				std::cout << "You're Getting better, don't have to worry about quarter health anymore." <<
 					" Medium Health selected.\n";
+				Player1.healthPickup = Health::HALF_HEALTH;
+
 				pickupChoiceIsValid = true;
 			}
 			else {
-				Player1.pickup.Pickups::FULL_HEALTH;
 				std::cout << "Wow look out or Go touch some grass, you're a high rank and you get full health. As in life apparently the rich get richer.\n";
+				Player1.healthPickup = Health::FULL_HEALTH;
+
 				pickupChoiceIsValid = true;
 			}
 			break;
 		case 1:
 			if (Player1.CurrentRank == Player1.RankType[0]) {
-				Player1.pickup.Pickups::GLOCK_AMMO;
 				std::cout << "You don't really have a choice here I guess. Glock Ammo\n";
+				Player1.ammoPickup = Ammo::GLOCK_AMMO;
+
 				pickupChoiceIsValid = true;
 			}
 			else if (Player1.CurrentRank == Player1.RankType[1]) {
@@ -286,19 +266,22 @@ void PlayerSetup(Player Player1)
 				bool validAmmoChoice;
 				do {
 					std::cout << "Since you're not rank zero, pick an ammo type for your weapon.\n (0)Glock (1)Colt45 Ammo";
+
 					std::cin >> AmmoChoice;
 					switch (AmmoChoice) {
 					case 0:
 						std::cout << "You have the ability to choose a better gun and you choose the" <<
 							" Glock ammo. Interesting\n";
-						Player1.pickup.Pickups::GLOCK_AMMO;
+						Player1.ammoPickup = Ammo::GLOCK_AMMO;
+
 						pickupChoiceIsValid = true;
 						validAmmoChoice = true;
 
 						break;
 					case 1:
 						std::cout << "You're getting better, especially in your decision making. Colt45 ammo selceted\n";
-						Player1.pickup.Pickups::COLT45_AMMO;
+						Player1.ammoPickup = Ammo::COLT45_AMMO;
+
 						pickupChoiceIsValid = true;
 						validAmmoChoice = true;
 
@@ -322,19 +305,22 @@ void PlayerSetup(Player Player1)
 					switch (AmmoChoice) {
 					case 0:
 						std::cout << "Seriously? Glock ammo at this juncture? \n";
-						Player1.pickup.Pickups::GLOCK_AMMO;
+						Player1.ammoPickup = Ammo::GLOCK_AMMO;
+
 						pickupChoiceIsValid = true;
 						ammoChoiceValid = true;
 						break;
 					case 1:
 						std::cout << "Going against the meta, how commendable. Colt 45 ammo selected\n";
-						Player1.pickup.Pickups::COLT45_AMMO;
+						Player1.ammoPickup = Ammo::COLT45_AMMO;
+
 						pickupChoiceIsValid = true;
 						ammoChoiceValid = true;
 						break;
 					case 2:
 						std::cout << "Meta slave here we go. Desert Eagle ammo selected\n";
-						Player1.pickup.Pickups::DESERT_EAGLE_AMMO;
+						Player1.ammoPickup = Ammo::DESERT_EAGLE_AMMO;
+
 						pickupChoiceIsValid = true;
 						ammoChoiceValid = true;
 						break;
@@ -350,31 +336,37 @@ void PlayerSetup(Player Player1)
 				bool validAmmoChoice;
 				do {
 					std::cout << "Pick ammo type for your weapon. (0)Glock (1)Colt45 Ammo (2)Desert Eagle Ammo (3)Raging Bull Ammo";
+
 					std::cin >> AmmoChoice;
 					switch (AmmoChoice) {
 					case 0:
 						std::cout << "All these choices, and you decide to pick a glock. \n";
-						Player1.pickup.Pickups::GLOCK_AMMO;
+						Player1.ammoPickup = Ammo::GLOCK_AMMO;
+
+
 						pickupChoiceIsValid = true;
 						validAmmoChoice = true;
 						break;
 					case 1:
 						std::cout << "Either you're really good at this game or have some screws loose. Colt 45 selected\n";
-						Player1.pickup.Pickups::COLT45_AMMO;
+						Player1.ammoPickup = Ammo::COLT45_AMMO;
+
 						pickupChoiceIsValid = true;
 						validAmmoChoice = true;
 
 						break;
 					case 2:
 						std::cout << "Somewhat logical. Desert Eagle ammo Selected.\n";
-						Player1.pickup.Pickups::DESERT_EAGLE_AMMO;
+						Player1.ammoPickup = Ammo::DESERT_EAGLE_AMMO;
+
 						pickupChoiceIsValid = true;
 						validAmmoChoice = true;
 
 						break;
 					case 3:
 						std::cout << "Meta slave meta slave meta slave. Raging Bull ammo Selected\n";
-						Player1.pickup.Pickups::RAGING_BULL_AMMO;
+						Player1.ammoPickup = Ammo::RAGING_BULL_AMMO;
+
 						pickupChoiceIsValid = true;
 						validAmmoChoice = true;
 
@@ -392,17 +384,16 @@ void PlayerSetup(Player Player1)
 		case 2:
 			if (Player1.CurrentRank == Player1.RankType[0]) {
 				std::cout << "Light Armor granted.\n";
-				Player1.pickup.Pickups::LITE;
+				Player1.armorPickup = Armor::LITE;
+
 				pickupChoiceIsValid = true;
 			}
 			else if (Player1.CurrentRank == Player1.RankType[1]) {
 				std::cout << "Medium Armor selected.\n";
-				Player1.pickup.Pickups::MEDIUM;
 				pickupChoiceIsValid = true;
 			}
 			else {
 				std::cout << "Heavy armor selected.\n";
-				Player1.pickup.Pickups::HEAVY;
 				pickupChoiceIsValid = true;
 			}
 			break;
@@ -414,22 +405,23 @@ void PlayerSetup(Player Player1)
 
 	//WeaponChoice
 	do {
-		int weaponChoice;
+		
 
 		std::cout << "Choose a weapon: Sword(0), Pistol(1) or Grenade(2)" << std::endl;
-		std::cin >> weaponChoice;
+		std::cin >> Player1.weaponChoice;
 
-		switch (weaponChoice)
+		switch (Player1.weaponChoice)
 		{
 		case 0:
 			if (Player1.CurrentRank == Player1.RankType[0])
 			{
 				std::cout << "Welcome young padawan! :) You get to start with a dagger!" << std::endl;
+				Player1.sword = Sword::DAGGER;
 			}
 			else if (Player1.CurrentRank == Player1.RankType[1])
 			{
 				int swordType;
-				bool isValid_SwordType;
+				bool isValid_SwordType = false;
 				std::cout << "I see you have moved up in the world, Choose between a Dagger(0) or a Longsword(1)\n";
 				std::cin >> swordType;
 
@@ -438,20 +430,22 @@ void PlayerSetup(Player Player1)
 					{
 					case 0:
 						std::cout << "Interesting choice, I assume your depending on skill...\n";
-						Player1.weapon.Sword::DAGGER;
 						isValid_SwordType = true;
 						break;
 					case 1:
 						std::cout << "A new weapon! The Longsword... with great power comes great responsibility\n";
-						Player1.weapon.Sword::LONGSWORD;
 						isValid_SwordType = true;
 						break;
 					default:
 						std::cout << "Invalid Sword Type, please choose 0 or 1\n";
 					}
 				} while (!isValid_SwordType);
-				
 			}
+			else if (Player1.CurrentRank == Player1.RankType[2])
+			{
+
+			}
+		//case 1:
 
 		}
 
