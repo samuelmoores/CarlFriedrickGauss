@@ -25,6 +25,7 @@ struct Player {
 	float health = 100.0f;
 	float stamina = 50.0f;
 	int strength = 50;
+	bool isDead;
 
 	int totalScore = 0;
 	int scores[3] = { 0, 0, 0 };
@@ -46,6 +47,7 @@ struct Enemy {
 	float stamina = 50.0f;
 	int experience = 0;
 	Sword sword;
+	bool isDead;
 
 	bool isArmed = true;
 	int strength = 50;
@@ -69,11 +71,12 @@ void firstLevel(Player& Player1)
 	int score = 0;
 	std::ofstream outFile;
 	std::ifstream inFile;
-	int attackChoice = 0;
+	int attackChoice;
+	bool validAttackChoice = false;
 
 	srand((unsigned)time(NULL));
-	int enemyWeapon = rand() % 4 + 0;
-	int enemyWeaponType = rand() % 4 + 0;
+	int enemyWeapon = rand() % 2 + 0;
+	int enemyWeaponType = rand() % 3 + 0;
 	enemy1.experience = rand() % 2 + 0;
 
 	std::cout << "-----------------------------------Welcome to level one-----------------------------------------\n\n";
@@ -150,6 +153,7 @@ void firstLevel(Player& Player1)
 		break;
 	}
 
+	//check enemy experience
 	if (enemy1.experience == 0)
 	{
 		enemy1.strength = 25;
@@ -164,6 +168,7 @@ void firstLevel(Player& Player1)
 		enemy1.strength = 75;
 	}
 
+	//player attack choice
 	if (Player1.weaponChoice == 0)
 	{
 		std::cout << "Choose a sword attack!\n (0) Strong (1) Quick";
@@ -171,11 +176,34 @@ void firstLevel(Player& Player1)
 
 	}
 
-	if (enemy1.strength == 25)
+	do {
+		if (attackChoice == 1)
+		{
+			std::cout << "Quick attack!\n";
+			enemy1.health -= 10;
+			validAttackChoice = true;
+		}
+		else if (attackChoice == 0)
+		{
+			std::cout << "Strong Attack!\n";
+			enemy1.health -= 100;
+			Player1.stamina -= 25;
+			enemy1.stamina -= 15;
+			validAttackChoice = true;
+
+		}
+
+	} while (!validAttackChoice);
+	
+	if (enemy1.health <= 0)
 	{
-		std::cout << "Enemy's health -25!\n";
+		std::cout << "enemy dead!\n";
 	}
 
+	if (Player1.isDead)
+	{
+		firstLevel(Player1)
+	}
 
 }
 
