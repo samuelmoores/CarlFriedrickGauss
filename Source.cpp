@@ -73,9 +73,13 @@ void firstLevel(Player& Player1)
 	std::ifstream inFile;
 	int attackChoice;
 	bool validAttackChoice = false;
+	bool gameOver = false;
+	outFile.open("levelOneScore.txt");
 
+
+	
 	srand((unsigned)time(NULL));
-	int enemyWeapon = rand() % 2 + 0;
+	int enemyWeapon = 0;
 	int enemyWeaponType = rand() % 3 + 0;
 	enemy1.experience = rand() % 2 + 0;
 
@@ -168,42 +172,103 @@ void firstLevel(Player& Player1)
 		enemy1.strength = 75;
 	}
 
-	//player attack choice
-	if (Player1.weaponChoice == 0)
-	{
-		std::cout << "Choose a sword attack!\n (0) Strong (1) Quick";
-		std::cin >> attackChoice;
-
-	}
-
 	do {
+		std::cout << "Player Health: " << Player1.health << std::endl;
+		std::cout << "Enemy Health: " << enemy1.health << std::endl;
+
+		
+		//player attack choice
+		if (Player1.weaponChoice == 0)
+		{
+			std::cout << "Choose a sword attack!\n (0) Strong (1) Quick";
+			std::cin >> attackChoice;
+
+		}
+
 		if (attackChoice == 1)
 		{
-			std::cout << "Quick attack!\n";
+			std::cout << "Player Quick attack!\n";
+			std::cout << "-10 damage to enemy!\n";
+
 			enemy1.health -= 10;
 			validAttackChoice = true;
 		}
 		else if (attackChoice == 0)
 		{
-			std::cout << "Strong Attack!\n";
+			std::cout << "Player Strong Attack!\n";
+			std::cout << "-100 damage to enemy!\n";
+
 			enemy1.health -= 100;
-			Player1.stamina -= 25;
-			enemy1.stamina -= 15;
+			
+			//Player1.stamina -= 25;
+			//enemy1.stamina -= 15;
 			validAttackChoice = true;
 
 		}
 
-	} while (!validAttackChoice);
-	
-	if (enemy1.health <= 0)
-	{
-		std::cout << "enemy dead!\n";
-	}
+		if (validAttackChoice)
+		{
+			int enemyAttackChoice = rand() % 2 + 0;
 
-	if (Player1.isDead)
-	{
-		firstLevel(Player1)
-	}
+			if (enemyAttackChoice == SwordAttacks::QUICK)
+			{
+				std::cout << "Quick Attack\n";
+				Player1.health -= 15;
+			}
+			else
+			{
+				std::cout << "Enemy Strong Attack!\n";
+
+				if (enemy1.strength == 25)
+				{
+					Player1.health -= 25;
+					std::cout << "-25 damage to player!\n";
+
+
+				}
+				else if (enemy1.strength == 50)
+				{
+					Player1.health -= 50;
+					std::cout << "-50 damage to player!\n";
+
+				}
+				else if (enemy1.strength == 75)
+				{
+					Player1.health -= 75;
+					std::cout << "-75 damage to player!\n";
+
+				}
+
+			}
+
+			if (enemy1.health <= 0)
+			{
+				std::cout << "Enemy dead, you win!\n";
+				gameOver = true;
+				score += 5;
+			}
+			else if (Player1.health <= 0)
+			{
+				std::cout << "You died, game over!\n";
+				gameOver = true;
+				score -= 1;
+
+			}
+			
+			outFile << score;
+
+			outFile.close();
+
+
+		}
+		else
+		{
+			std::cout << "Invalid attack choice, choose 1 or 0!\n";
+		}
+		
+	} while (!validAttackChoice || !gameOver);
+	
+	
 
 }
 
@@ -521,12 +586,27 @@ void MainMenu(Player Player1)
 
 int main()
 {
-	Player Player1;
-	bool isPlaying = false;
-	
-	MainMenu(Player1);
+	int matrix[10][10];
 
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if ((i > 2 && j > 2) && (i < 8 && j < 8))
+			{
+				std::cout << "[a]";
 
+			}
+			else
+			{
+				std::cout << "[x]";
+			}
+			
+
+		}
+		std::cout << std::endl;
+		
+	}
+		
 	return 0;
-
 }
