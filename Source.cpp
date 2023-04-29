@@ -306,7 +306,7 @@ void PlayerSetup(Player Player1)
 				pickupChoiceIsValid = true;
 			}
 			else {
-				std::cout << "Heavy armor selected.\n";
+				std::cout << "Heavy armor selected. Congrats\n";
 				Player1.pickup.Pickups::HEAVY;
 				pickupChoiceIsValid = true;
 			}
