@@ -3,6 +3,26 @@
 #include <time.h>
 #include <vector>
 
+
+class GameMode {
+
+public:
+	float difficulty = 100.0f;
+
+protected:
+	int LevelEnvirment;
+
+private:
+	bool terminateAllOperations;
+
+};
+
+class LevelEditor : protected GameMode
+{
+
+};
+
+
 struct Pickups {
 	enum  Health { FULL_HEALTH, HALF_HEALTH, QUARTER_HEALTH };
 	enum  AMMO { GLOCK_AMMO, COLT45_AMMO, DESERT_EAGLE_AMMO, RAGING_BULL_AMMO};
@@ -34,6 +54,8 @@ struct Player {
 	std::string name = "";
 	float health = 100.0f;
 	float stamina = 50.0f;
+
+	float* healthPointer = &health;
 
 	int weaponChoice = 0; 
 
@@ -345,53 +367,10 @@ void PlayerSetup(Player Player1)
 
 int main()
 {
-	bool isPlaying = false;
-	int totalScore = 0;
-	Player Player1;
+	GameMode Default;
+
+	LevelEditor LevelOneEditor;
 
 
-	int keepPlaying = 0;
-
-	int scores[3] = {0, 0, 0};
-
-	std::cout << "Welcome to the Game\n";
-	isPlaying = true;
-
-	PlayerSetup(Player1);
-
-	do 
-	{
-		std::cout << "Are you ready to start playing? (1)yes or (2)no";
-		std::cin >> keepPlaying;
-
-		if (keepPlaying == 1)
-		{
-			isPlaying = true;
-		}
-		else if (keepPlaying == 2)
-		{
-			isPlaying = true;
-		}
-		else
-		{
-			isPlaying = false;
-		}
-
-	} while (!isPlaying);
-
-	//
-	if (keepPlaying == 1)
-	{
-		//play levels
-		firstLevel(totalScore, Player1);
-
-		//output game data to a file
-	}
-	else if (keepPlaying == 2)
-	{
-		
-	}
-
-	return 0;
-
+	
 }
